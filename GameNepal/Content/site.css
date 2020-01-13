@@ -1,0 +1,78 @@
+﻿body {
+    display: -ms-flexbox;
+    display: -webkit-box;
+    display: flex;
+    -ms-flex-pack: center;
+    -webkit-box-pack: center;
+    justify-content: center;
+    font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol";
+}
+
+html, body {
+    height: 100%;
+    background-color: #f5f5f5;
+}
+
+nav.navbar.navbar-dark.bg-primary{
+    background-color:#094486;
+    color:#fff;
+}
+nav.navbar.navbar-dark.bg-primary a{
+    color: #fff;
+}
+
+    nav.navbar.navbar-dark.bg-primary a:hover {
+        background-color: #349be0;
+    }
+ul.nav.navbar-nav.navbar-right .active {
+    background-color: #131673;
+    border-right: 1px solid #4f48bf;
+    border-left: 1px solid #4f48bf;
+}
+
+span.icon-bar{
+    background-color:#fff;
+}
+/* Table Stylesheet */
+@media (min-width: 1600px) {
+    .container {
+        width: 1600px;
+    }
+}
+#tblTransaction {
+    font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+}
+
+    #tblTransaction td, #tblTransaction th {
+        border: 1px solid #ddd;
+        padding: 8px;
+    }
+
+    #tblTransaction tr:nth-child(even) {
+        background-color: #f2f2f2;
+    }
+
+    #tblTransaction tr:hover {
+        background-color: #ddd;
+    }
+
+    #tblTransaction th {
+        padding-top: 12px;
+        padding-bottom: 12px;
+        text-align: left;
+        background-color: #094486;
+        color: white;
+    }
+
+    #tblTransaction td.last {
+        width: 5px;
+        white-space: nowrap;
+    }
+        #tblTransaction td.last .actDivider {
+            font-size: 20px;
+            font-weight: 600;
+            color: grey;
+        }
+        

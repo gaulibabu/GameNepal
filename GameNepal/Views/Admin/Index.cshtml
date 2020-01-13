@@ -1,0 +1,147 @@
+﻿
+@model List<GameNepal.Models.UserTransactionViewModel>
+@{
+    ViewBag.Title = "Admin";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@if (TempData["CancelErrorMsg"] != null)
+{
+    <div class="col-sm-offset-3 col-sm-9 alert alert-danger fade in" id="divError">
+        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+        @Html.Raw(TempData["CancelErrorMsg"])
+    </div>
+}
+
+@if (TempData["CancelSuccessMsg"] != null)
+{
+    <div class="col-sm-offset-3 col-sm-9  alert alert-success fade in" id="divResult">
+        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+        @Html.Raw(TempData["CancelSuccessMsg"])
+    </div>
+}
+@if (Model.Count > 0)
+{
+    <div class="table-wrapper tm-bg-white-transparent">
+        <div class="text-content">
+            <table class="table table-hover table-bordered" id="tblTransaction">
+                <thead class="tm-bg-black-transparent">
+                    <tr>
+                        <th scope="col">Last Activity Date</th>
+                        <th scope="col">Full Name</th>
+                        <th scope="col">Payment Method</th>
+                        <th scope="col">Receipt Number</th>
+                        <th scope="col">Amount</th>
+                        <th scope="col">Game</th>
+                        <th scope="col">User Name</th>
+                        <th scope="col">Remarks</th>
+                        <th scope="col">Status</th>
+                        <th scope="col">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        var tooltipMsg = item.Email + "<br/>" + item.Phone;
+                        <tr>
+                            <td>@item.LastTransactionUpdateDate</td>
+                            <td> <span class="d-inline-block" tabindex="0" data-toggle="tooltip" data-html="true" title=@tooltipMsg>@item.FirstName  @item.LastName</span></td>
+                            <td>@item.PaymentPartner</td>
+                            <td>@item.PaymentId</td>
+                            <td>@item.Amount</td>
+                            <td>@item.Game</td>
+                            <td>@item.Username</td>
+                            <td>@item.Remarks</td>
+                            <td>@item.CurrentStatus</td>
+                            <td>
+                                @if (item.Status == (int)GameNepal.Models.TransactionStatus.New)
+                                {
+                                    <a href="#approveConfirm" class="approveTransaction" url="@Url.Action("ProcessTransaction","Admin", new { id = item.TransactionId, userAction = "Approve"  })"
+                                       data-toggle="modal" )><span title="approve" class="glyphicon  glyphicon-ok" style="color:forestgreen"></span></a>
+                                    <span class="actDivider">|</span>
+                                    <a href="#deleteConfirm" class="deleteTransaction" url="@Url.Action("ProcessTransaction","Admin", new { id = item.TransactionId, userAction = "Cancel"  })"
+                                       data-toggle="modal" )><span title="delete" class="glyphicon  glyphicon-trash" style="color:red"></span></a>
+                                }
+                                else
+                                {
+                                    <a href="#resetConfirm" class="resetTransaction" url="@Url.Action("ProcessTransaction","Admin", new { id = item.TransactionId, userAction = "Reset"  })"
+                                       data-toggle="modal" )><span title="reset" class="glyphicon glyphicon-repeat" style="color:steelblue"></span></a>
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+}
+else
+{
+    <div>No Transaction History found</div>
+}
+
+<div class="modal fade" id="approveConfirm" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body">
+                Are you sure you want to approve this order ?
+            </div>
+            <div class="modal-footer">
+                <a id="confirmApprove" class="btn btn-success">Yes, I want to approve</a>
+                <button type="button" class="btn btn-danger" data-dismiss="modal">No, I don't want to approve</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="resetConfirm" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body">
+                Are you sure you want to reset this transaction ?
+            </div>
+            <div class="modal-footer">
+                <a id="confirmReset" class="btn btn-success">Yes, I want to reset</a>
+                <button type="button" class="btn btn-danger" data-dismiss="modal">No, I don't want to reset</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="deleteConfirm" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body">
+                Are you sure you want to cancel this order ?
+            </div>
+            <div class="modal-footer">
+                <a id="confirmCancel" class="btn btn-success">Yes, I want to cancel</a>
+                <button type="button" class="btn btn-danger" data-dismiss="modal">No, I don't want to cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="../../Scripts/jquery-3.3.1.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $('.deleteTransaction').click(function (e) {
+            e.preventDefault();
+            var url = $(this).attr('url');
+            $('#confirmCancel').attr('href', url);
+        });
+
+        $('.approveTransaction').click(function (e) {
+            e.preventDefault();
+            var url = $(this).attr('url');
+            $('#confirmApprove').attr('href', url);
+        });
+
+        $('.resetTransaction').click(function (e) {
+            e.preventDefault();
+            var url = $(this).attr('url');
+            $('#confirmReset').attr('href', url);
+        });
+    });
+</script>

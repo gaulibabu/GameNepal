@@ -1,0 +1,155 @@
+﻿@model List<GameNepal.Models.TransactionModel>
+@{
+    ViewBag.Title = "Transaction History";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@if (TempData["CancelErrorMsg"] != null)
+{
+    <div class="col-sm-offset-3 col-sm-9 alert alert-danger fade in" id="divError">
+        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+        @Html.Raw(TempData["CancelErrorMsg"])
+    </div>
+}
+
+@if (TempData["CancelSuccessMsg"] != null)
+{
+    <div class="col-sm-offset-3 col-sm-9  alert alert-success fade in" id="divResult">
+        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+        @Html.Raw(TempData["CancelSuccessMsg"])
+    </div>
+}
+
+<div class="table-wrapper tm-bg-white-transparent">
+    <div class="text-content">
+        @if (Model.Count > 0)
+        {
+            <table class="table table-hover table-bordered" id="tblTransaction">
+                <thead class="tm-bg-black-transparent">
+                    <tr>
+                        <th scope="col">Last Activity Date</th>
+                        <th scope="col">Payment Method</th>
+                        <th scope="col">Receipt Id</th>
+                        <th scope="col">Amount</th>
+                        <th scope="col">Game</th>
+                        <th scope="col">User Name</th>
+                        <th scope="col">Remarks</th>
+                        <th scope="col">Status</th>
+                        <th scope="col">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>@item.UpdateDate</td>
+                            <td>@item.PaymentParnter</td>
+                            <td>@item.PaymentId</td>
+                            <td>@item.Amount</td>
+                            <td>@item.Game</td>
+                            <td>@item.Username</td>
+                            <td>@item.Remarks</td>
+                            <td>@item.CurrentStatus</td>
+                            <td class="last">
+                                @if (item.Status == (int)GameNepal.Models.TransactionStatus.New)
+                                {
+                                    <a href="#editTransactionModal" class="editTransaction" data-toggle="modal"
+                                       url="@Url.Action("EditTransaction","User", new { id=item.Id })" data-id="@item.Id"><span title="edit" class="glyphicon  glyphicon-edit"></span></a>
+                                    <span class="actDivider">|</span>
+                                    <a href="#deleteConfirm" class="deleteTransaction" url="@Url.Action("CancelTransaction","User", new { id = item.Id })"
+                                       data-toggle="modal" )><span title="delete" class="glyphicon  glyphicon-trash" style="color:red"></span></a>
+                                }
+
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+        else
+        {
+            <div>No Transaction History found</div>
+        }
+    </div>
+</div>
+
+<section class="row" id="tmHomeForm">
+    <div class="col-12 tm-call-to-action-col">
+        <div id="editTransactionModal" data-backdrop="static" data-keyboard="false" class="modal fade" tabindex="-1" role="dialog">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Edit Transaction</h5>
+                    </div>
+                    <div class="modal-body"></div>
+                    <div class="modal-footer">
+                        <p class="tm-call-to-action-description" style="color:red">
+                            *It might take more processing time than usual if payment amount does not match receipt number
+                        </p>
+                        <button type="submit" class="btn btn-success" id="updateTransaction">Save changes</button>
+                        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="modal fade" id="deleteConfirm" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body">
+                Are you sure you want to cancel this order ?
+            </div>
+            <div class="modal-footer">
+                <a id="confirmCancel" class="btn btn-success btn-ok">Yes, I want to cancel</a>
+                <button type="button" class="btn btn-danger" data-dismiss="modal">No, I don't want to cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="../../Scripts/jquery-3.3.1.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $('.editTransaction').click(function (e) {
+            e.preventDefault();
+            var action = $(this).attr('url');
+            $.get(action, function (data) {
+                $('#editTransactionModal').find(".modal-body").html(data);
+            });
+        });
+
+        $('#updateTransaction').click(function (e) {
+            e.preventDefault();
+            var $form = $('#editTransaction');
+
+            if ($form[0].checkValidity()) {
+                $.post($form.attr("action"),
+                    $form.serialize()).done(function (res) {
+                        $mymodal = $("#editTransactionModal");
+                        $mymodal.find(".modal-body").html(res);
+                        $mymodal.show();
+
+                        if (res.success) {
+                            $mymodal.hide();
+                            window.location.reload();
+                        }
+                    });
+            }
+            else {
+                //create a dummy button to trigger click for UI validation
+                var tmpSubmitBtn = $('<button></button>');
+                $form.append(tmpSubmitBtn);
+                tmpSubmitBtn.click();
+                tmpSubmitBtn.remove();;
+            }
+        });
+
+        $('.deleteTransaction').click(function (e) {
+            e.preventDefault();
+            var url = $(this).attr('url');
+            $('#confirmCancel').attr('href', url);
+        });
+    });
+</script>

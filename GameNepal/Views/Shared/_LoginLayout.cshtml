@@ -1,0 +1,60 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title</title>
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+    @Styles.Render("~/Content/myLogin.css")
+</head>
+<body class="text-center">
+    <div class="errorMessage">
+        @if (TempData["SuccessMsg"] != null)
+        {
+        <div class="alert alert-success fade in" id="divResult">
+            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+            @Html.Raw(TempData["SuccessMsg"])
+        </div>
+        }
+
+        @if (TempData["ErrorMsg"] != null)
+        {
+        <div class="alert alert-danger fade in" id="divError">
+            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+            @Html.Raw(TempData["ErrorMsg"])
+            @Html.ValidationSummary(false, "", new { @class = "text-danger" })
+        </div>
+        }
+    </div>
+    
+    <div class="cover-container d-flex h-100 p-3 mx-auto flex-column">
+        <header>
+            <div class="text-center mb-4">
+                @if (ViewBag.Title == "Login")
+                {
+                    <img class="mb-4" src="~/Content/images/logo.png" alt="GameNepal - your gaming companion">
+                }
+                else
+                {
+                    <a href="@Url.Action("Login","Home")"><img class="mb-4" src="~/Content/images/logo.png" alt="GameNepal - your gaming companion"></a>
+                }
+
+            </div>
+        </header>
+        <main role="main" class="inner cover">
+            @RenderBody()
+        </main>
+
+        <footer class="mastfoot mt-auto navbar-fixed-bottom">
+            <div class="inner">
+                <p>&copy; GameNepal - All rights reserved @DateTime.Now.Year</p>
+            </div>
+        </footer>
+    </div>
+
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @RenderSection("scripts", required: false)
+</body>
+</html>

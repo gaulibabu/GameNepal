@@ -1,0 +1,28 @@
+﻿@model GameNepal.Models.TransactionModel
+
+@if (Model.PaymentInfo.Keys.Count > 0)
+{
+    <table class="table table-striped table-dark">
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Payment Partner</th>
+                <th scope="col">Account Number</th>
+            </tr>
+        </thead>
+        <tbody>
+            @{
+                var counter = 1;
+                foreach (var item in Model.PaymentInfo)
+                {
+                    <tr>
+                        <th scope="row">@counter</th>
+                        <td>@item.Key</td>
+                        <td>@item.Value</td>
+                    </tr>
+                    counter++;
+                }
+            }
+        </tbody>
+    </table>
+}

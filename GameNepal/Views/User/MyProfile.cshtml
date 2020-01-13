@@ -1,0 +1,74 @@
+﻿@model GameNepal.Models.UserViewModel
+@{
+    ViewBag.Title = "Profile";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<section class="row" id="myProfile">
+    <div class="col-12 tm-call-to-action-col">
+        <div class="col-lg-3">
+            <div class="tm-bg-transparent tm-call-to-action-text sidebar">
+                <div class="avatar">
+                    <div class="tm-person-img-container">
+                        <img src="../../Content/images/myProfile.png" alt="Image" class="img-fluid mx-auto">
+                    </div>
+                </div>
+                <ul class="manage-profile">
+                    <li>
+                        <a href="#editProfileModal" data-toggle="modal" class="btn btn-primary">Edit Profile</a>
+                    </li>
+                    <li>
+                        <a href="#changePwdModal" data-toggle="modal" class="btn btn-primary">Change Password</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div id="editProfileModal" data-backdrop="static" data-keyboard="false" class="modal fade" tabindex="-1" role="dialog">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Edit your profile</h5>
+                    </div>
+                    <div class="modal-body">
+                        @Html.Partial("_EditProfile", Model)
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="changePwdModal" data-backdrop="static" data-keyboard="false" class="modal fade" tabindex="-1" role="dialog">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Change Password</h5>
+                    </div>
+                    <div class="modal-body">
+                        @Html.Partial("~/Views/Home/_ChangePassword.cshtml", Model.PasswordModel)
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-9">
+            <div class="tm-bg-transparent tm-call-to-action-text">
+                <div class="" style="border-bottom:1px solid black">
+                    <h2>@Model.FirstName @Model.LastName</h2>
+                </div>
+                <hr>
+                <div class="col-md-6">
+                    <ul class="details">
+                        <li><p><span class="glyphicon glyphicon-earphone one" style="width:50px;"></span>@Model.Phone</p></li>
+                        <li><p><span class="glyphicon glyphicon-envelope one" style="width:50px;"></span>@Model.Email</p></li>
+                        <li><p><span class="glyphicon glyphicon-map-marker one" style="width:50px;"></span>@Model.City</p></li>
+                    </ul>
+                </div><i class="fi-male-female"></i>
+                <div class="col-md-6">
+                    <ul class="details">
+                        <li><p><span class="">Age Group : </span>@Model.AgeGroup</p></li>
+                        <li><p><span class="">Gender : </span>@Model.Gender</p></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

@@ -1,0 +1,26 @@
+﻿@{
+    ViewBag.Title = "Login";
+    Layout= "~/Views/Shared/_LoginLayout.cshtml";
+}
+
+
+@using (Html.BeginForm("Login", "Home", FormMethod.Post, new { @class = "form-signin" }))
+{
+    <div class="row">
+        <div class="form-label-group">
+            @Html.TextBox("txtUserName", "", new { @id = "inputEmail", @class = "form-control", placeholder = "Email address", type = "email", required = "required" })
+            @Html.Label("inputEmail", "Email address")
+        </div>
+
+        <div class="form-label-group">
+            @Html.Password("txtPassword", "", new { @id = "inputPassword", @class = "form-control", placeholder = "Password", required = "required" })
+            @Html.Label("inputPassword", "Password")
+        </div>
+
+        <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+        <br />
+        @Html.ActionLink("Forgot Password", "ForgotPassword", "Home") <span style="color:#094486">|</span>
+        @Html.ActionLink("New User ? Sign up here", "Register", "Home")
+    </div>
+}
+

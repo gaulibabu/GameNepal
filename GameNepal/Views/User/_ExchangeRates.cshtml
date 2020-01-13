@@ -1,0 +1,28 @@
+﻿@model GameNepal.Models.GameExchangeRate
+
+@if (Model != null)
+{
+    <table class="table table-striped table-dark">
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Rate</th>
+                <th scope="col">Game Currency</th>
+            </tr>
+        </thead>
+        <tbody>
+            @{
+                var counter = 1;
+                foreach (var item in Model.ExchageRates)
+                {
+                    <tr>
+                        <th scope="row">@counter</th>
+                        <td>Nrs. @item.CurrencyValue</td>
+                        <td>@item.CurrencyAmount @Model.CurrencyCode</td>
+                    </tr>
+                    counter++;
+                }
+            }
+        </tbody>
+    </table>
+}

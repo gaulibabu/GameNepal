@@ -1,0 +1,167 @@
+﻿@model List<GameNepal.Models.PaymentPartnerViewModel>
+@{
+    ViewBag.Title = "Admin";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<a href="#addPartnerModal" class="btn btn-lg addPartner" data-toggle="modal" style="color:white; font-size:larger"
+   url="@Url.Action("AddPaymentPartner","Admin")"><span title="edit" class="glyphicon  glyphicon-plus" style="color:white"></span> Add New Account</a>
+
+@if (Model.Count > 0)
+{
+    <div class="table-wrapper tm-bg-white-transparent">
+        <div class="text-content">
+            <table class="table table-hover table-bordered" id="tblPaymentPartners">
+                <thead class="tm-bg-black-transparent">
+                    <tr>
+                        <th scope="col">Create Date</th>
+                        <th scope="col">Last Update Date</th>
+                        <th scope="col">Name</th>
+                        <th scope="col">Account Details</th>
+                        <th scope="col">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var payPartner in Model)
+                    {
+                        <tr>
+                            <td>@payPartner.CreateDate</td>
+                            <td>@payPartner.UpdateDate</td>
+                            <td>@payPartner.PartnerName</td>
+                            <td>@payPartner.PaymentInfo</td>
+
+                            <td>
+                                @if (payPartner.IsActive)
+                                {
+                                    <a href="#editPartnerModal" class="editPartner" data-toggle="modal"
+                                       url="@Url.Action("EditPaymentPartner","Admin", new { id = payPartner.Id })" )><span title="edit" class="glyphicon  glyphicon-edit" style="color:darkgreen"></span></a>
+                                    <span class="actDivider">|</span>
+                                    <a href="@Url.Action("UpdatePaymentPartner","Admin", new { id = payPartner.Id, status = "Deactivate"  })" )><span title="de-activate" class="glyphicon  glyphicon-remove" style="color:red"></span></a>
+                                }
+                                else
+                                {
+                                    <a href="@Url.Action("UpdatePaymentPartner","Admin", new { id = payPartner.Id, status = "Activate"  })" )><span title="activate" class="glyphicon glyphicon-refresh" style="color:steelblue"></span></a>
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+}
+else
+{
+    <div>No payment accounts found</div>
+}
+
+<section class="row" id="tmHomeForm">
+    <div class="col-12 tm-call-to-action-col">
+        <div id="editPartnerModal" data-backdrop="static" data-keyboard="false" class="modal fade" tabindex="-1" role="dialog">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Update Account</h5>
+                    </div>
+                    <div class="modal-body"></div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-success" id="updatePartner">Save changes</button>
+                        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="addPartnerModal" data-backdrop="static" data-keyboard="false" class="modal fade" tabindex="-1" role="dialog">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Add Account</h5>
+                    </div>
+                    <div class="modal-body"></div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-success" id="addPartner">Save changes</button>
+                        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script src="../../Scripts/jquery-3.3.1.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $('.editPartner').click(function (e) {
+            e.preventDefault();
+            var action = $(this).attr('url');
+            $.get(action, function (data) {
+                $('#editPartnerModal').find(".modal-body").html(data);
+            });
+        });
+
+        $('.addPartner').click(function (e) {
+            e.preventDefault();
+            var action = $(this).attr('url');
+            $.get(action, function (data) {
+                $('#addPartnerModal').find(".modal-body").html(data);
+            });
+        });
+
+        $('#updatePartner').click(function (e) {
+            e.preventDefault();
+            var $form = $('#paymentPartner');
+
+            if ($form[0].checkValidity()) {
+                $.post($form.attr("action"),
+                    $form.serialize()).done(function (res) {
+                        $mymodal = $("#editPartnerModal");
+                        $mymodal.find(".modal-body").html(res);
+                        $mymodal.show();
+
+                        if (res.success) {
+                            $mymodal.hide();
+                            window.location.reload();
+                        }
+                    });
+            }
+            else {
+                //create a dummy button to trigger click for UI validation
+                var tmpSubmitBtn = $('<button></button>');
+                $form.append(tmpSubmitBtn);
+                tmpSubmitBtn.click();
+                tmpSubmitBtn.remove();
+            }
+        });
+
+        $('#addPartner').click(function (e) {
+            e.preventDefault();
+            var $form = $('#addPaymentPartner');
+
+            if ($form[0].checkValidity()) {
+                $.post($form.attr("action"),
+                    $form.serialize()).done(function (res) {
+                        $mymodal = $("#addPartnerModal");
+                        $mymodal.find(".modal-body").html(res);
+                        $mymodal.show();
+
+                        if (res.success) {
+                            $mymodal.hide();
+                            window.location.reload();
+                        }
+                    });
+            }
+            else {
+                //create a dummy button to trigger click for UI validation
+                var tmpSubmitBtn = $('<button></button>');
+                $form.append(tmpSubmitBtn);
+                tmpSubmitBtn.click();
+                tmpSubmitBtn.remove();
+            }
+        });
+
+    });
+</script>
+
+
+

@@ -1,0 +1,99 @@
+﻿@model GameNepal.Models.UserViewModel
+@{
+    ViewBag.Title = "Register";
+    Layout = "~/Views/Shared/_LayoutOLD.cshtml";
+}
+
+<body style="margin: 10px;">
+    <div class="container">
+        <h2 style="color: cornflowerblue; text-align: center;">Register here</h2>
+        @using (Html.BeginForm("Register","Home"))
+        {
+        <div class="row">
+            @if (TempData["ErrorMsg"] != null)
+            {
+                <div class="col-sm-offset-3 col-sm-9 alert alert-danger fade in" id="divError">
+                    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                    @Html.Raw(TempData["ErrorMsg"])
+                    @Html.ValidationSummary()
+                </div>
+            }
+            <div class="form-group">
+                @Html.Label("First Name", new { @class = "col-sm-3 control-label" })
+                <div class="col-sm-9">
+                    @Html.TextBoxFor(x => x.FirstName, new { @class = "form-control", placeholder = "First Name", required="required" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.Label("Last Name", new { @class = "col-sm-3 control-label" })
+                <div class="col-sm-9">
+                    @Html.TextBoxFor(x => x.LastName, new { @class = "form-control", placeholder = "Last Name", required = "required" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.Label("Email", new { @class = "col-sm-3 control-label" })
+                <div class="col-sm-9">
+                    @Html.TextBoxFor(x => x.Email, new { @class = "form-control", @placeholder = "Email address", required = "required", type = "email" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.Label("Phone", new { @class = "col-sm-3 control-label" })
+                <div class="col-sm-9">
+                    @Html.TextBoxFor(x => x.Phone, new { @class = "form-control", @placeholder = "Phone Number", @maxlength = "10", type="tel", required = "required" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.Label("Gender", new { @class = "col-sm-3 control-label" })
+                <div class="col-sm-9">
+                    @Html.RadioButtonFor(x => x.Gender, "Male", new { @checked = "checked" }) <span>Male</span>
+                    <br />
+                    @Html.RadioButtonFor(x => x.Gender, "Female") <span>Female</span>
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.Label("City", new { @class = "col-sm-3 control-label" })
+                <div class="col-sm-9">
+                    @Html.TextBoxFor(x => x.City, new { @class = "form-control", @placeholder = "City" })
+                </div>
+            </div>
+
+
+            <div class="form-group">
+                @Html.Label("Age Group", new { @class = "col-sm-3 control-label" })
+                <div class="col-sm-9">
+                    @Html.DropDownListFor(x => x.AgeGroup, new SelectList(Model.AgeGroups), new { @class = "form-control" })
+                </div>
+
+            </div>
+
+            <div class="form-group">
+                @Html.Label("Password", new { @class = "col-sm-3 control-label" })
+                <div class="col-sm-9">
+                    @Html.PasswordFor(x => x.Password, new { @class = "form-control", @placeholder = "Password", required = "required" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.Label("Re-enter Password", new { @class = "col-sm-3 control-label" })
+                <div class="col-sm-9">
+                    @Html.Password("pwdReEntered", null, new { @class = "form-control", @placeholder = "Re-enter Password", required = "required" })
+                </div>
+            </div>
+
+            <br />
+
+            <div class="col-sm-9">
+                <center>
+                    <input type="reset" id="btnReset" class="btn btn-info" value="Clear" />
+                    <input type="submit" id="btnSend" class="btn btn-info" value="Send" />
+                </center>
+            </div>
+        </div>
+        }
+    </div>
+</body>
