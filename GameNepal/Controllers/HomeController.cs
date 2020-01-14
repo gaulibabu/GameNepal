@@ -104,8 +104,8 @@ namespace GameNepal.Controllers
                         }
 
                         user.type = (int)UserTypes.General;
-                        user.createdate = DateTime.Now;
-                        user.updatedate = DateTime.Now;
+                        user.createdate = Helper.GetCurrentDateTime();
+                        user.updatedate = Helper.GetCurrentDateTime();
                         user.isActive = true;
 
                         user.firstname = userModel.FirstName;
@@ -204,7 +204,7 @@ namespace GameNepal.Controllers
                         var token = Guid.NewGuid();
                         var pwdToken = new PasswordToken();
 
-                        pwdToken.createdate = DateTime.Now;
+                        pwdToken.createdate = Helper.GetCurrentDateTime();
                         pwdToken.token = token;
                         pwdToken.userid = userId;
                         pwdToken.isValid = true;
@@ -299,7 +299,7 @@ namespace GameNepal.Controllers
                             else
                             {
                                 contextUser.password = hashedNewPwd;
-                                contextUser.updatedate = DateTime.Now;
+                                contextUser.updatedate = Helper.GetCurrentDateTime();
 
                                 context.Users.Add(contextUser);
                                 context.Entry(contextUser).State = System.Data.Entity.EntityState.Modified;
@@ -308,7 +308,7 @@ namespace GameNepal.Controllers
                                     .Where(x => x.userid.Equals(contextUser.id)).OrderByDescending(x => x.createdate)
                                     .FirstOrDefault();
                                 pwdToken.isValid = false;
-                                pwdToken.updatedate = DateTime.Now;
+                                pwdToken.updatedate = Helper.GetCurrentDateTime();
 
                                 context.PasswordTokens.Add(pwdToken);
                                 context.Entry(pwdToken).State = System.Data.Entity.EntityState.Modified;
@@ -391,7 +391,7 @@ namespace GameNepal.Controllers
                             else
                             {
                                 contextUser.password = hashedNewPwd;
-                                contextUser.updatedate = DateTime.Now;
+                                contextUser.updatedate = Helper.GetCurrentDateTime();
 
                                 context.Users.Add(contextUser);
                                 context.Entry(contextUser).State = System.Data.Entity.EntityState.Modified;
@@ -436,7 +436,7 @@ namespace GameNepal.Controllers
         private DateTime GetValidPassowrdResetDateTime()
         {
             var expiryTime = Convert.ToInt32(ConfigurationManager.AppSettings.Get("PasswordResetLinkExpiryInMinutes"));
-            return DateTime.Now.AddMinutes(expiryTime);
+            return Helper.GetCurrentDateTime().AddMinutes(expiryTime);
         }
     }
 }

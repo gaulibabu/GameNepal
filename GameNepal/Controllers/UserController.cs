@@ -124,7 +124,7 @@ namespace GameNepal.Controllers
 
                             user.type = (int)UserTypes.General;
 
-                            user.updatedate = DateTime.Now;
+                            user.updatedate = Helper.GetCurrentDateTime();
                             user.isActive = true;
 
                             user.firstname = userModel.FirstName;
@@ -183,8 +183,8 @@ namespace GameNepal.Controllers
 
                         var transaction = new Transaction
                         {
-                            createdate = DateTime.Now,
-                            updatedate = DateTime.Now,
+                            createdate = Helper.GetCurrentDateTime(),
+                            updatedate = Helper.GetCurrentDateTime(),
                             status = (int)TransactionStatus.New,
                             userid = user.id,
 
@@ -279,7 +279,7 @@ namespace GameNepal.Controllers
                             return PartialView("_EditTransaction", transactionModel);
                         }
 
-                        transaction.updatedate = DateTime.Now;
+                        transaction.updatedate = Helper.GetCurrentDateTime();
                         transaction.status = (int)TransactionStatus.New;
                         transaction.userid = user.id;
 
@@ -375,7 +375,7 @@ namespace GameNepal.Controllers
                     if (transaction != null)
                     {
                         transaction.status = (int)TransactionStatus.Cancelled;
-                        transaction.updatedate = DateTime.Now;
+                        transaction.updatedate = Helper.GetCurrentDateTime();
 
                         context.Entry(transaction).State = System.Data.Entity.EntityState.Modified;
                         context.SaveChanges();

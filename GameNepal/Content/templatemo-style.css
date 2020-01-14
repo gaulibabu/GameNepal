@@ -569,7 +569,7 @@ p {
 #myProfile .btn-success {
     margin-left: 15px;
 }
-#editProfile .col-sm-9, #changePassword .col-sm-9 {
+#editProfile .col-sm-9, #changePassword .col-sm-9, #paymentPartner .col-sm-9, #addPaymentPartner .col-sm-9 {
     margin-bottom: 15px;
 }
 /* Transaction Page */

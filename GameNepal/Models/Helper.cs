@@ -12,6 +12,8 @@ namespace GameNepal.Models
 {
     public static class Helper
     {
+        private static TimeZoneInfo NEPAL_TIME_ZONE = TimeZoneInfo.FindSystemTimeZoneById("Nepal Standard Time");
+
         public static string EncodeToBase64(string password)
         {
             byte[] bytes = Encoding.Unicode.GetBytes(password);
@@ -28,6 +30,11 @@ namespace GameNepal.Models
                 case (int)TransactionStatus.Cancelled: return "Cancelled";
                 default: return "Error";
             }
+        }
+
+        public static DateTime GetCurrentDateTime()
+        {
+            return TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, NEPAL_TIME_ZONE);
         }
 
         public static void Email(string sendToEmailAddress, string messageBody)

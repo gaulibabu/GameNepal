@@ -103,7 +103,7 @@ namespace GameNepal.Controllers
                             transaction.status = (int)TransactionStatus.New;
                         else return RedirectToAction("Index");
 
-                        transaction.updatedate = DateTime.Now;
+                        transaction.updatedate = Helper.GetCurrentDateTime();
 
                         context.Entry(transaction).State = System.Data.Entity.EntityState.Modified;
                         context.SaveChanges();
@@ -174,7 +174,7 @@ namespace GameNepal.Controllers
 
                         else return RedirectToAction("Index");
 
-                        user.updatedate = DateTime.Now;
+                        user.updatedate = Helper.GetCurrentDateTime();
 
                         context.Entry(user).State = System.Data.Entity.EntityState.Modified;
                         context.SaveChanges();
@@ -240,7 +240,7 @@ namespace GameNepal.Controllers
 
                         else return RedirectToAction("PaymentPartners");
 
-                        paymentPartner.updatedate = DateTime.Now;
+                        paymentPartner.updatedate = Helper.GetCurrentDateTime();
 
                         context.Entry(paymentPartner).State = System.Data.Entity.EntityState.Modified;
                         context.SaveChanges();
@@ -309,7 +309,7 @@ namespace GameNepal.Controllers
                             {
                                 payModel.partnername = model.PartnerName;
                                 payModel.paymentinfo = model.PaymentInfo;
-                                payModel.updatedate = DateTime.Now;
+                                payModel.updatedate = Helper.GetCurrentDateTime();
 
                                 context.Entry(payModel).State = System.Data.Entity.EntityState.Modified;
                                 context.SaveChanges();
@@ -366,8 +366,8 @@ namespace GameNepal.Controllers
                                 partnername = model.PartnerName,
                                 paymentinfo = model.PaymentInfo,
                                 isActive = true,
-                                createdate = DateTime.Now,
-                                updatedate = DateTime.Now
+                                createdate = Helper.GetCurrentDateTime(),
+                                updatedate = Helper.GetCurrentDateTime()
                             };
 
                             context.Entry(payModel).State = System.Data.Entity.EntityState.Added;

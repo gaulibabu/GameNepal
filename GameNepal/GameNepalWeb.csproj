@@ -189,9 +189,6 @@
     <Content Include="Content\images\myProfile.png" />
     <Content Include="Content\images\people.jpg" />
     <Content Include="Content\images\pubg.jpg" />
-    <Content Include="Content\images\slide-1.jpg" />
-    <Content Include="Content\images\slide-2.jpg" />
-    <Content Include="Content\images\slide-3.jpg" />
     <Content Include="Content\myLogin.css" />
     <Content Include="Content\templatemo-style.css" />
     <Content Include="favicon.ico" />
