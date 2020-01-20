@@ -12,13 +12,13 @@ namespace GameNepal.Models
 {
     public static class Helper
     {
-        private static TimeZoneInfo NEPAL_TIME_ZONE = TimeZoneInfo.FindSystemTimeZoneById("Nepal Standard Time");
+        private static readonly TimeZoneInfo NepalTimeZone = TimeZoneInfo.FindSystemTimeZoneById("Nepal Standard Time");
 
         public static string EncodeToBase64(string password)
         {
-            byte[] bytes = Encoding.Unicode.GetBytes(password);
-            byte[] inArray = HashAlgorithm.Create("SHA1").ComputeHash(bytes);
-            return Convert.ToBase64String(inArray);
+            var bytes = Encoding.Unicode.GetBytes(password);
+            var inArray = HashAlgorithm.Create("SHA1")?.ComputeHash(bytes);
+            return Convert.ToBase64String(inArray ?? throw new InvalidOperationException());
         }
 
         public static string GetCurrentTransactionStatus(int status)
@@ -34,7 +34,13 @@ namespace GameNepal.Models
 
         public static DateTime GetCurrentDateTime()
         {
-            return TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, NEPAL_TIME_ZONE);
+            return TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, NepalTimeZone);
+        }
+
+        public static DateTime GetValidPasswordResetDateTime()
+        {
+            var expiryTime = Convert.ToInt32(ConfigurationManager.AppSettings.Get("PasswordResetLinkExpiryInMinutes"));
+            return GetCurrentDateTime().AddMinutes(expiryTime);
         }
 
         public static void Email(string sendToEmailAddress, string messageBody)
@@ -43,10 +49,10 @@ namespace GameNepal.Models
             var password = ConfigurationManager.AppSettings.Get("Password");
             var smtpPort = Convert.ToInt32(ConfigurationManager.AppSettings.Get("SMTPPort"));
             var smtpHost = ConfigurationManager.AppSettings.Get("SMTPHost");
+            var message = new MailMessage();
+            var smtp = new SmtpClient();
             try
             {
-                MailMessage message = new MailMessage();
-                SmtpClient smtp = new SmtpClient();
                 message.From = new MailAddress("noreply@gamenepal.com");
                 message.To.Add(new MailAddress(sendToEmailAddress));
                 message.Subject = "Reset your password";
@@ -60,7 +66,10 @@ namespace GameNepal.Models
                 smtp.DeliveryMethod = SmtpDeliveryMethod.Network;
                 smtp.Send(message);
             }
-            catch (Exception) { }
+            catch (Exception)
+            {
+                // ignored
+            }
         }
     }
 }
