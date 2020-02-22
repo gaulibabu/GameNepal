@@ -1,0 +1,43 @@
+﻿@model List<GameNepal.Models.ErrorLogViewModel>
+
+@{
+    ViewBag.Title = "Admin";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@if (Model.Count > 0)
+{
+    <div class="table-wrapper tm-bg-white-transparent">
+        <div class="text-content">
+            <table class="table table-hover table-bordered" id="tblErrorLog">
+                <thead class="tm-bg-black-transparent">
+                    <tr>
+                        <th scope="col">Create Date</th>
+                        <th scope="col">Source</th>
+                        <th scope="col">Message</th>
+                        <th scope="col">Error Type</th>
+                        <th scope="col">Stack Trace</th>
+                        <th scope="col">User Id</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var error in Model)
+                    {
+                    <tr>
+                        <td>@error.CreateDate</td>
+                        <td>@error.Source</td>
+                        <td>@error.Message</td>
+                        <td>@error.Type</td>
+                        <td>@error.StackTrace</td>
+                        <td>@error.UserId</td>
+                    </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+}
+else
+{
+    <div>No errors found</div>
+}

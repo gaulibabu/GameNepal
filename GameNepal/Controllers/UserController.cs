@@ -5,9 +5,11 @@ using System.Linq;
 using System.Text;
 using System.Web;
 using System.Web.Mvc;
+using GameNepal.Filters;
 
 namespace GameNepal.Controllers
 {
+    [ExceptionFilter]
     public class UserController : Controller
     {
         public ActionResult Index()
@@ -18,7 +20,6 @@ namespace GameNepal.Controllers
             var transactionModel = new TransactionModel();
             TempData["TransactionErrorMsg"] = null;
             return View(transactionModel);
-
         }
 
         public ActionResult MyProfile()
@@ -78,7 +79,6 @@ namespace GameNepal.Controllers
                 };
 
                 return PartialView("_EditProfile", userModel);
-
             }
         }
 
@@ -91,52 +91,55 @@ namespace GameNepal.Controllers
             if (!ModelState.IsValid)
                 return PartialView("_EditProfile", userModel);
 
+            if (Session["UserInfo"] == null)
+                return RedirectToAction("Login", "Home");
+
+            var user = Session["UserInfo"] as User;
             try
             {
                 using (var context = new GameNepalEntities())
                 {
-                    if (Session["UserInfo"] is User user)
+                    var emailExists = context.Users
+                        .FirstOrDefault(x => x.email.Equals(userModel.Email)
+                                             && !x.id.Equals(user.id));
+
+                    if (emailExists != null)
                     {
-                        var emailExists = context.Users
-                            .FirstOrDefault(x => x.email.Equals(userModel.Email)
-                                                 && !x.id.Equals(user.id));
-
-                        if (emailExists != null)
-                        {
-                            TempData["ErrorMsg"] =
-                                "The email address you entered already exists in our system. <br/>Please use a different email address or try Forgot Password from the login page.";
-                            return PartialView("_EditProfile", userModel);
-                        }
-
-                        user.type = (int)UserTypes.General;
-
-                        user.updatedate = Helper.GetCurrentDateTime();
-                        user.isActive = true;
-
-                        user.firstname = userModel.FirstName;
-                        user.lastname = userModel.LastName;
-                        user.email = userModel.Email;
-                        user.phone = userModel.Phone;
-
-                        user.gender = userModel.Gender;
-                        user.city = userModel.City;
-                        user.agegroup = userModel.AgeGroup;
-
-                        context.Users.Add(user);
-                        context.Entry(user).State = System.Data.Entity.EntityState.Modified;
-
-                        context.SaveChanges();
-
-                        Session["UserInfo"] = user;
+                        TempData["ErrorMsg"] =
+                            "The email address you entered already exists in our system. <br/>Please use a different email address or try Forgot Password from the login page.";
+                        return PartialView("_EditProfile", userModel);
                     }
+
+                    user.type = (int)UserTypes.General;
+
+                    user.updatedate = Helper.GetCurrentDateTime();
+                    user.isActive = true;
+
+                    user.firstname = userModel.FirstName;
+                    user.lastname = userModel.LastName;
+                    user.email = userModel.Email;
+                    user.phone = userModel.Phone;
+
+                    user.gender = userModel.Gender;
+                    user.city = userModel.City;
+                    user.agegroup = userModel.AgeGroup;
+
+                    context.Users.Add(user);
+                    context.Entry(user).State = System.Data.Entity.EntityState.Modified;
+
+                    context.SaveChanges();
+
+                    Session["UserInfo"] = user;
+
 
                     TempData["ErrorMsg"] = null;
                     return Json(new { success = true });
                 }
             }
 
-            catch
+            catch (Exception e)
             {
+                Helper.LogException(e.Source, e.Message, e.GetType().ToString(), e.StackTrace, user.id);
                 TempData["ErrorMsg"] = "<strong>Some unexpected error occured. Please try again!! </strong>";
                 return PartialView("_EditProfile", userModel);
             }
@@ -192,8 +195,9 @@ namespace GameNepal.Controllers
                 TempData["SuccessMsg"] = "Your last order is placed successfully. Please <a href='/User/TransactionHistory'> check transaction history.</a>";
                 return RedirectToAction("Index");
             }
-            catch
+            catch(Exception e)
             {
+                Helper.LogException(e.Source, e.Message, e.GetType().ToString(), e.StackTrace, user.id);
                 TempData["ErrorMsg"] = "<strong>Some unexpected error occured. Please try again!! </strong>";
                 return View("Index", transactionModel);
             }
@@ -205,29 +209,39 @@ namespace GameNepal.Controllers
                 return RedirectToAction("Login", "Home");
 
             var user = Session["UserInfo"] as User;
-
-            using (var context = new GameNepalEntities())
+            try
             {
-                var transaction = context.Transactions
-                    .FirstOrDefault(x => x.id.Equals(id) && x.status.Equals((int)TransactionStatus.New)
-                                                         && x.userid.Equals(user.id));
-
-                if (transaction == null)
-                    return RedirectToAction("TransactionHistory");
-
-                var transactionModel = new TransactionModel
+                using (var context = new GameNepalEntities())
                 {
-                    Id = transaction.id,
-                    PaymentPartnerId = transaction.paypartnerid,
-                    PaymentId = transaction.paymentid,
-                    Amount = transaction.amount,
-                    Status = transaction.status,
-                    Username = transaction.username,
-                    Remarks = transaction.remarks
-                };
+                    var transaction = context.Transactions
+                        .FirstOrDefault(x => x.id.Equals(id) && x.status.Equals((int)TransactionStatus.New)
+                                                             && x.userid.Equals(user.id));
 
-                return PartialView("_EditTransaction", transactionModel);
+                    if (transaction == null)
+                        return RedirectToAction("TransactionHistory");
+
+                    var transactionModel = new TransactionModel
+                    {
+                        Id = transaction.id,
+                        PaymentPartnerId = transaction.paypartnerid,
+                        PaymentId = transaction.paymentid,
+                        Amount = transaction.amount,
+                        Status = transaction.status,
+                        Username = transaction.username,
+                        Remarks = transaction.remarks
+                    };
+
+                    return PartialView("_EditTransaction", transactionModel);
+                }
             }
+
+            catch (Exception e)
+            {
+                Helper.LogException(e.Source, e.Message, e.GetType().ToString(), e.StackTrace, user.id);
+                TempData["ErrorMsg"] = "<strong>Some unexpected error occured. Please try again!! </strong>";
+                return RedirectToAction("TransactionHistory");
+            }
+
         }
 
         [HttpPost]
@@ -280,8 +294,9 @@ namespace GameNepal.Controllers
                 return Json(new { success = true });
             }
 
-            catch
+            catch(Exception e)
             {
+                Helper.LogException(e.Source, e.Message, e.GetType().ToString(), e.StackTrace, user.id);
                 TempData["ErrorMsg"] = "<strong>Some unexpected error occured. Please try again!! </strong>";
                 return PartialView("_EditTransaction", transactionModel);
             }
@@ -297,41 +312,51 @@ namespace GameNepal.Controllers
             var gameList = new TransactionModel().GamesList;
             var paymentPartners = new TransactionModel().PaymentPartners;
 
-            using (var context = new GameNepalEntities())
+            try
             {
-                var transactionList = context.Transactions
-                    .Where(x => x.userid.Equals(user.id))
-                    .ToList();
-
-                foreach (var transaction in transactionList)
+                using (var context = new GameNepalEntities())
                 {
-                    var transactionModel = new TransactionModel
-                    {
-                        Id = transaction.id,
-                        UpdateDate = transaction.updatedate,
-                        PaymentId = transaction.paymentid,
-                        Amount = transaction.amount,
-                        Status = transaction.status,
-                        Username = transaction.username,
-                        Remarks = transaction.remarks,
-                        CurrentStatus = Helper.GetCurrentTransactionStatus(transaction.status),
-                        Game = gameList
-                            .Where(x => x.Value.Equals(transaction.gameid.ToString()))
-                            .Select(x => x.Text).FirstOrDefault(),
-                        PaymentParnter = paymentPartners
-                            .Where(x => x.Value.Equals(transaction.paypartnerid.ToString()))
-                            .Select(x => x.Text).FirstOrDefault()
-                    };
+                    var transactionList = context.Transactions
+                        .Where(x => x.userid.Equals(user.id))
+                        .ToList();
 
-                    if (string.IsNullOrEmpty(transactionModel.PaymentParnter))
+                    foreach (var transaction in transactionList)
                     {
-                        transactionModel.PaymentParnter = "N/A";
+                        var transactionModel = new TransactionModel
+                        {
+                            Id = transaction.id,
+                            UpdateDate = transaction.updatedate,
+                            PaymentId = transaction.paymentid,
+                            Amount = transaction.amount,
+                            Status = transaction.status,
+                            Username = transaction.username,
+                            Remarks = transaction.remarks,
+                            CurrentStatus = Helper.GetCurrentTransactionStatus(transaction.status),
+                            Game = gameList
+                                .Where(x => x.Value.Equals(transaction.gameid.ToString()))
+                                .Select(x => x.Text).FirstOrDefault(),
+                            PaymentParnter = paymentPartners
+                                .Where(x => x.Value.Equals(transaction.paypartnerid.ToString()))
+                                .Select(x => x.Text).FirstOrDefault()
+                        };
+
+                        if (string.IsNullOrEmpty(transactionModel.PaymentParnter))
+                        {
+                            transactionModel.PaymentParnter = "N/A";
+                        }
+
+                        transactionModelList.Add(transactionModel);
                     }
-
-                    transactionModelList.Add(transactionModel);
                 }
+                return View(transactionModelList);
             }
-            return View(transactionModelList);
+
+            catch (Exception e)
+            {
+                Helper.LogException(e.Source, e.Message, e.GetType().ToString(), e.StackTrace, user.id);
+                TempData["ErrorMsg"] = "<strong>Some unexpected error occured. Please try again!! </strong>";
+                return RedirectToAction("Index");
+            }
         }
 
         public ActionResult CancelTransaction(int id)
@@ -340,28 +365,39 @@ namespace GameNepal.Controllers
                 return RedirectToAction("Login", "Home");
 
             var user = Session["UserInfo"] as User;
-            using (var context = new GameNepalEntities())
+            try
             {
-                var transaction = context.Transactions
-                    .FirstOrDefault(x => x.id.Equals(id) && x.status.Equals((int)TransactionStatus.New)
-                                                         && x.userid.Equals(user.id));
-
-                if (transaction != null)
+                using (var context = new GameNepalEntities())
                 {
-                    transaction.status = (int)TransactionStatus.Cancelled;
-                    transaction.updatedate = Helper.GetCurrentDateTime();
+                    var transaction = context.Transactions
+                        .FirstOrDefault(x => x.id.Equals(id) && x.status.Equals((int)TransactionStatus.New)
+                                                             && x.userid.Equals(user.id));
 
-                    context.Entry(transaction).State = System.Data.Entity.EntityState.Modified;
-                    context.SaveChanges();
+                    if (transaction != null)
+                    {
+                        transaction.status = (int)TransactionStatus.Cancelled;
+                        transaction.updatedate = Helper.GetCurrentDateTime();
 
-                    TempData["CancelErrorMsg"] = null;
-                    TempData["CancelSuccessMsg"] = "<strong>Your order is cancelled successfully.</strong>";
-                    return RedirectToAction("TransactionHistory");
+                        context.Entry(transaction).State = System.Data.Entity.EntityState.Modified;
+                        context.SaveChanges();
+
+                        TempData["CancelErrorMsg"] = null;
+                        TempData["CancelSuccessMsg"] = "<strong>Your order is cancelled successfully.</strong>";
+                        return RedirectToAction("TransactionHistory");
+                    }
+
+                    TempData["CancelErrorMsg"] = "<strong>Some error occured cancelling this order. Please try again.</strong>";
+                    return View("TransactionHistory");
                 }
+            }
 
-                TempData["CancelErrorMsg"] = "<strong>Some error occured cancelling this order. Please try again.</strong>";
+            catch (Exception e)
+            {
+                Helper.LogException(e.Source, e.Message, e.GetType().ToString(), e.StackTrace, user.id);
+                TempData["ErrorMsg"] = "<strong>Some unexpected error occured. Please try again!! </strong>";
                 return View("TransactionHistory");
             }
+
         }
     }
 }

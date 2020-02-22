@@ -127,15 +127,22 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Advertisement.cs">
+      <DependentUpon>GameNepalModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\UserController.cs" />
+    <Compile Include="ErrorLog.cs">
+      <DependentUpon>GameNepalModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="ExchangeRate.cs">
       <DependentUpon>GameNepalModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Filters\ExceptionFilter.cs" />
     <Compile Include="Game.cs">
       <DependentUpon>GameNepalModel.tt</DependentUpon>
     </Compile>
@@ -157,6 +164,8 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\AdvertisementViewModel.cs" />
+    <Compile Include="Models\ErrorLogViewModel.cs" />
     <Compile Include="Models\ExchangeRate.cs" />
     <Compile Include="Models\Helper.cs" />
     <Compile Include="Models\PasswordModel.cs" />
@@ -234,7 +243,6 @@
     <Content Include="Views\Admin\PaymentPartners.cshtml" />
     <Content Include="Views\Admin\_EditPaymentPartner.cshtml" />
     <Content Include="Views\Admin\_AddPaymentPartner.cshtml" />
-    <None Include="Views\User\newHome.cshtml" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
@@ -264,9 +272,14 @@
     <Content Include="Views\Home\ResetPassword.cshtml" />
     <Content Include="Views\User\_PaymentAccount.cshtml" />
     <Content Include="Views\User\_ExchangeRates.cshtml" />
+    <Content Include="Views\Admin\Advertisement.cshtml" />
+    <Content Include="Views\Admin\_AddAdvertisement.cshtml" />
+    <Content Include="Views\Admin\_EditAdvertisement.cshtml" />
+    <Content Include="Views\Admin\ErrorLog.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Content\advertisements\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />

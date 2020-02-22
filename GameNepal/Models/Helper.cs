@@ -7,6 +7,7 @@ using System.Text;
 using System.Net.Mail;
 using System.Net;
 using System.Configuration;
+using Microsoft.Ajax.Utilities;
 
 namespace GameNepal.Models
 {
@@ -43,6 +44,11 @@ namespace GameNepal.Models
             return GetCurrentDateTime().AddMinutes(expiryTime);
         }
 
+        public static string GetFileUploadPath()
+        {
+            return ConfigurationManager.AppSettings.Get("AdvertisementDirectory");
+        }
+
         public static void Email(string sendToEmailAddress, string messageBody)
         {
             var fromEmailAddress = ConfigurationManager.AppSettings.Get("FromEmail");
@@ -69,6 +75,25 @@ namespace GameNepal.Models
             catch (Exception)
             {
                 // ignored
+            }
+        }
+
+        public static void LogException(string source, string message, string type, string stackTrace, int? userId = null)
+        {
+            using (var context = new GameNepalEntities())
+            {
+                var errorLog = new ErrorLog()
+                {
+                    message = message,
+                    source = source,
+                    type = type,
+                    createdate = GetCurrentDateTime(),
+                    stackTrace = stackTrace,
+                    userid = userId
+                };
+                context.ErrorLogs.Add(errorLog);
+                context.Entry(errorLog).State = System.Data.Entity.EntityState.Added;
+                context.SaveChanges();
             }
         }
     }

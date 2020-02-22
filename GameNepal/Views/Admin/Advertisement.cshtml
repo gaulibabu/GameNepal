@@ -1,0 +1,180 @@
+﻿@model List<GameNepal.Models.AdvertisementViewModel>
+@{
+    ViewBag.Title = "Admin";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<a href="#addAdvertisementModal" class="btn btn-lg addAdvertisement" data-toggle="modal" style="color:white; font-size:larger"
+   url="@Url.Action("AddAdvertisement","Admin")"><span title="edit" class="glyphicon  glyphicon-plus" style="color:white"></span>&nbsp; Add Advertisement</a>
+
+@if (Model.Count > 0)
+{
+    <div class="table-wrapper tm-bg-white-transparent">
+        <div class="text-content">
+            <table class="table table-hover table-bordered" id="tblAdvertisements">
+                <thead class="tm-bg-black-transparent">
+                    <tr>
+                        <th scope="col">Create Date</th>
+                        <th scope="col">Last Update Date</th>
+                        <th scope="col">File Name</th>
+                        <th scope="col">Description</th>
+                        <th scope="col">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var ad in Model)
+                    {
+                        <tr>
+                            <td>@ad.CreateDate</td>
+                            <td>@ad.UpdateDate</td>
+                            <td>@ad.FileName</td>
+                            <td>@ad.Description</td>
+
+                            <td>
+                                @if (ad.IsActive)
+                                {
+                                    <a href="#editAdvertisementModal" class="editAd" data-toggle="modal"
+                                       url="@Url.Action("EditAdvertisement","Admin", new { id = ad.Id })" )><span title="edit" class="glyphicon  glyphicon-edit" style="color:darkgreen"></span></a>
+                                    <span class="actDivider">|</span>
+                                    <a href="@Url.Action("UpdateAdvertisement","Admin", new { id = ad.Id, status = "Deactivate"  })" )><span title="de-activate" class="glyphicon  glyphicon-remove" style="color:red"></span></a>
+                                }
+                                else
+                                {
+                                    <a href="@Url.Action("UpdateAdvertisement","Admin", new { id = ad.Id, status = "Activate"  })" )><span title="activate" class="glyphicon glyphicon-refresh" style="color:steelblue"></span></a>
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+}
+else
+{
+    <div>No advertisements found</div>
+}
+
+<section class="row" id="tmHomeForm">
+    <div class="col-12 tm-call-to-action-col">
+        <div id="editAdvertisementModal" data-backdrop="static" data-keyboard="false" class="modal fade" tabindex="-1" role="dialog">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Update Advertisement</h5>
+                    </div>
+                    <div class="modal-body"></div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-success" id="updateAd">Save changes</button>
+                        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="addAdvertisementModal" data-backdrop="static" data-keyboard="false" class="modal fade" tabindex="-1" role="dialog">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Add Advertisement</h5>
+                    </div>
+                    <div class="modal-body"></div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-success" id="addAdvertisement">Save changes</button>
+                        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script src="../../Scripts/jquery-3.3.1.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $('.editAd').click(function (e) {
+            e.preventDefault();
+            var action = $(this).attr('url');
+            $.get(action, function (data) {
+                $('#editAdvertisementModal').find(".modal-body").html(data);
+            });
+        });
+
+        $('.addAdvertisement').click(function (e) {
+            e.preventDefault();
+            var action = $(this).attr('url');
+            $.get(action, function (data) {
+                $('#addAdvertisementModal').find(".modal-body").html(data);
+            });
+        });
+
+        $('#updateAd').click(function (e) {
+            e.preventDefault();
+            var $form = $('#editAdvertisement');
+
+            if ($form[0].checkValidity()) {
+                $.post($form.attr("action"),
+                    $form.serialize()).done(function (res) {
+                        $mymodal = $("#editAdvertisementModal");
+                        $mymodal.find(".modal-body").html(res);
+                        $mymodal.show();
+
+                        if (res.success) {
+                            $mymodal.hide();
+                            window.location.reload();
+                        }
+                    });
+            }
+            else {
+                //create a dummy button to trigger click for UI validation
+                var tmpSubmitBtn = $('<button></button>');
+                $form.append(tmpSubmitBtn);
+                tmpSubmitBtn.click();
+                tmpSubmitBtn.remove();
+            }
+        });
+
+        $('#addAdvertisement').click(function (e) {
+            e.preventDefault();
+            var $form = $('#addAdvertisement');
+
+            if ($form[0].checkValidity()) {
+                var formData = new FormData();
+                var fileInput = $('#file')[0];
+
+                formData.append(fileInput.files[0].name, fileInput.files[0]);
+
+                var $inputs = $('#addAdvertisement :input');
+
+                $inputs.each(function () {
+                    formData.append(this.name, $(this).val());
+                });
+
+                var xhr = new XMLHttpRequest();
+                xhr.open('POST', $form.attr("action"));
+                xhr.send(formData);
+
+                xhr.onreadystatechange = function () {
+                    var $mymodal = $("#addAdvertisementModal");
+                    $mymodal.find(".modal-body").html(xhr.response);
+                    $mymodal.show();
+
+                    var responseType = xhr.getResponseHeader("content-type") || "";
+                    if (responseType === "application/json; charset=utf-8") {
+                        var result = JSON.parse(xhr.response);
+                        if (result.success) {
+                            $mymodal.hide();
+                            window.location.reload();
+                        }
+                    }
+                }
+            }
+            else {
+                var tmpSubmitBtn = $('<button></button>');
+                $form.append(tmpSubmitBtn);
+                tmpSubmitBtn.click();
+                tmpSubmitBtn.remove();
+            }
+        });
+    });
+</script>

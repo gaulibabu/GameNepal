@@ -90,15 +90,31 @@ small {
     font-size: 2.3rem;
     color: #333333;
 }
-
-/* Nav */
-.tm-navbar {
-    padding: .5rem 1rem;
-    margin: 0;
-    /*max-width: 840px;*/
-    min-height: 120px;
-    justify-content:;
+.loggedUser {
+    float: right;
+    color: #ffffff;
+    margin-top: 15px;
+    font-size: 15px;
+    padding-right: 15px;
 }
+
+#tmHomeForm .advertisement {
+    padding: 100px 20px;
+    min-height: 803px;
+    width: calc(100% - 800px);
+}
+
+    #tmHomeForm .advertisement .carousel-control.left, #tmHomeForm .advertisement .carousel-control.right {
+        background-image: none;
+    }
+    /* Nav */
+    .tm-navbar {
+        padding: .5rem 1rem;
+        margin: 0;
+        /*max-width: 840px;*/
+        min-height: 120px;
+        justify-content:;
+    }
 
     .tm-navbar .navbar-nav {
         width: 100%;
@@ -569,7 +585,9 @@ p {
 #myProfile .btn-success {
     margin-left: 15px;
 }
-#editProfile .col-sm-9, #changePassword .col-sm-9, #paymentPartner .col-sm-9, #addPaymentPartner .col-sm-9 {
+#editProfile .col-sm-9, #changePassword .col-sm-9,
+#paymentPartner .col-sm-9, #addPaymentPartner .col-sm-9,
+#addAdvertisement .col-sm-9, #editAdvertisement .col-sm-9 {
     margin-bottom: 15px;
 }
 /* Transaction Page */
@@ -578,7 +596,11 @@ p {
     border-radius: 5px;
 }
 
-#tblTransaction, #tblTransaction th, #tblPaymentPartners, #tblPaymentPartners th, #tblUsers, #tblUsers th {
+#tblTransaction, #tblTransaction th,
+#tblPaymentPartners, #tblPaymentPartners th,
+#tblUsers, #tblUsers th,
+#tblAdvertisements, #tblAdvertisements th,
+#tblErrorLog, #tblErrorLog th {
     text-align: center;
 }
 

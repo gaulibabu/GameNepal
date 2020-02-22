@@ -4,13 +4,15 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="e4c2291bcdeb47a1a4f9477d3a2cf6e7" Name="Diagram1">
+      <Diagram DiagramId="e4c2291bcdeb47a1a4f9477d3a2cf6e7" Name="Diagram1" ShowGrid="false" ZoomLevel="114">
         <EntityTypeShape EntityType="GameNepalModel.Game" Width="1.5" PointX="0.75" PointY="0.75" IsExpanded="true" />
         <EntityTypeShape EntityType="GameNepalModel.Transaction" Width="1.5" PointX="2.75" PointY="0.75" IsExpanded="true" />
         <EntityTypeShape EntityType="GameNepalModel.User" Width="1.5" PointX="4.75" PointY="0.75" IsExpanded="true" />
         <EntityTypeShape EntityType="GameNepalModel.PaymentPartner" Width="1.5" PointX="6.875" PointY="2.125" />
         <EntityTypeShape EntityType="GameNepalModel.PasswordToken" Width="1.5" PointX="0.75" PointY="4.75" />
         <EntityTypeShape EntityType="GameNepalModel.ExchangeRate" Width="1.5" PointX="3.375" PointY="5.75" />
+        <EntityTypeShape EntityType="GameNepalModel.Advertisement" Width="1.5" PointX="5.375" PointY="5.75" />
+        <EntityTypeShape EntityType="GameNepalModel.ErrorLog" Width="1.5" PointX="0.75" PointY="7.75" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

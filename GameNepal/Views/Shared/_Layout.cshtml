@@ -15,13 +15,18 @@
 <body>
     <div class="parallax-window" data-parallax="scroll" data-image-src="../../Content/images/bg-01.jpg">
         <div class="container-fluid">
+            @{ var user = Session["UserInfo"] as User; }
+            <div class="loggedUser">
+                Logged in as : @user.firstname
+            </div>
             <div class="row tm-brand-row">
                 <div class="col-lg-3 col-11">
                     <div class="tm-brand-container tm-bg-white-transparent">
-                        <img src="~/Content/images/logo.png" />
-                        <br/><br/><br/> @{var user = Session["UserInfo"] as User; <div>@user.firstname</div>}
+                        <img src="~/Content/images/logo.png"/>
+                        <br/><br/><br/>
+
                     </div>
-                   
+
                 </div>
                 <div class="col-lg-9 col-1">
                     <div class="tm-nav">
@@ -37,23 +42,23 @@
                                     {
                                         <li class="nav-item">
                                             <div class="tm-nav-link-highlight"></div>
-                                            @Html.ActionLink("Home", "Index", "User", null, new { @class = "nav-link" })
+                                            @Html.ActionLink("Home", "Index", "User", null, new {@class = "nav-link"})
                                         </li>
                                         <li class="nav-item">
                                             <div class="tm-nav-link-highlight"></div>
-                                            @Html.ActionLink("My Profile", "MyProfile", "User", null, new { @class = "nav-link" })
+                                            @Html.ActionLink("My Profile", "MyProfile", "User", null, new {@class = "nav-link"})
                                         </li>
                                         <li class="nav-item">
                                             <div class="tm-nav-link-highlight"></div>
-                                            @Html.ActionLink("My Transactions", "TransactionHistory", "User", null, new { @class = "nav-link" })
+                                            @Html.ActionLink("My Transactions", "TransactionHistory", "User", null, new {@class = "nav-link"})
                                         </li>
                                         <li class="nav-item">
                                             <div class="tm-nav-link-highlight"></div>
-                                            @Html.ActionLink("Contact Us", "Contact", "Home", null, new { @class = "nav-link" })
+                                            @Html.ActionLink("Contact Us", "Contact", "Home", null, new {@class = "nav-link"})
                                         </li>
                                         <li class="nav-item">
                                             <div class="tm-nav-link-highlight"></div>
-                                            @Html.ActionLink("Logout", "Logout", "Home", null, new { @class = "nav-link" })
+                                            @Html.ActionLink("Logout", "Logout", "Home", null, new {@class = "nav-link"})
                                         </li>
                                     }
 
@@ -61,7 +66,7 @@
                                     {
                                         <li class="nav-item">
                                             <div class="tm-nav-link-highlight"></div>
-                                            @Html.ActionLink("Back to Login Page", "Login", "Home", null, new { @class = "nav-link" })
+                                            @Html.ActionLink("Back to Login Page", "Login", "Home", null, new {@class = "nav-link"})
                                         </li>
                                     }
 
@@ -69,23 +74,27 @@
                                     {
                                         <li class="nav-item">
                                             <div class="tm-nav-link-highlight"></div>
-                                            @Html.ActionLink("Home", "Index", "Admin", null, new { @class = "nav-link" })
+                                            @Html.ActionLink("Home", "Index", "Admin", null, new {@class = "nav-link"})
                                         </li>
                                         <li class="nav-item">
                                             <div class="tm-nav-link-highlight"></div>
-                                            @Html.ActionLink("Users", "Users", "Admin", null, new { @class = "nav-link" })
+                                            @Html.ActionLink("Users", "Users", "Admin", null, new {@class = "nav-link"})
                                         </li>
                                         <li class="nav-item">
                                             <div class="tm-nav-link-highlight"></div>
-                                            @Html.ActionLink("Payment Partners", "PaymentPartners", "Admin", null, new { @class = "nav-link" })
+                                            @Html.ActionLink("Payment Partners", "PaymentPartners", "Admin", null, new {@class = "nav-link"})
                                         </li>
                                         <li class="nav-item">
                                             <div class="tm-nav-link-highlight"></div>
-                                            @Html.ActionLink("Game & Rates", "GameAndRates", "Admin", null, new { @class = "nav-link" })
+                                            @Html.ActionLink("Ads", "Advertisement", "Admin", null, new {@class = "nav-link"})
                                         </li>
                                         <li class="nav-item">
                                             <div class="tm-nav-link-highlight"></div>
-                                            @Html.ActionLink("Logout", "Logout", "Home", null, new { @class = "nav-link" })
+                                            @Html.ActionLink("Error Log", "ErrorLog", "Admin", null, new {@class = "nav-link"})
+                                        </li>
+                                        <li class="nav-item">
+                                            <div class="tm-nav-link-highlight"></div>
+                                            @Html.ActionLink("Logout", "Logout", "Home", null, new {@class = "nav-link"})
                                         </li>
                                     }
                                 </ul>
@@ -100,7 +109,7 @@
             <!-- Page footer -->
             <footer class="row">
                 <p class="col-12 text-white text-center tm-copyright-text">
-                    Copyright &copy; GameNepal - Your Gaming Companion ::  All rights reserved  @DateTime.Now.Year
+                    Copyright &copy; GameNepal - Your Gaming Companion :: All rights reserved @DateTime.Now.Year
                 </p>
             </footer>
         </div>

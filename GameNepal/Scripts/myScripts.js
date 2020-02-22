@@ -2,7 +2,7 @@
     $('#tblTransaction').DataTable({
         "order": [[0, "desc"]],
         "columnDefs": [
-            { "type": "date", "targets": 0 }           
+            { "type": "date", "targets": 0 }
         ]
     });
 
@@ -20,14 +20,37 @@
         ]
     });   
 
+    $('#tblAdvertisements').DataTable({
+        "order": [[1, "desc"]],
+        "columnDefs": [
+            { "type": "date", "targets": 1 }
+        ]
+    });   
+
+    $('#tblErrorLog').DataTable({
+        "order": [[0, "desc"]],
+        "columnDefs": [
+            { "type": "date", "targets": 0, "width":"5px"}
+        ],
+        //"columns": [{ "width": "250px" },
+        //    { "width": "25px" },
+        //    { "width": "450px" },
+        //    { "width": "20px" },
+        //    { "width": "20px" },
+        //    { "width": "20px" }],
+        fixedColumns: {
+            leftColumns: 1,
+            rightColumns: 1
+        }
+    });
 
     var fullURL = window.location.href;
     var domain = location.host;
     var domainLength = location.host.length;
 
-    for (i = 0; i <= fullURL.length - 1; i++) {
+    for (var i = 0; i <= fullURL.length - 1; i++) {
         var str = fullURL.substring(i, domainLength + i);
-        if (str == domain) {
+        if (str === domain) {
             var routeValue = fullURL.substring(domainLength + i, fullURL.length);
             localStorage.setItem('routeValue', routeValue);
             break;
@@ -63,7 +86,7 @@
 $(function () {
     $('.tabgroup > div').hide();
     $('.tabgroup > div:first-of-type').show();
-    $('.tabs a').click(function (e) {
+    $('.tabs a').click(function(e) {
         e.preventDefault();
         var $this = $(this),
             tabgroup = '#' + $this.parents('.tabs').data('tabgroup'),
@@ -77,10 +100,11 @@ $(function () {
         // Scroll to tab content (for mobile)
         if ($(window).width() < 992) {
             $('html, body').animate({
-                scrollTop: $("#first-tab-group").offset().top
-            }, 200);
+                    scrollTop: $("#first-tab-group").offset().top
+                },
+                200);
         }
-    })
+    });
 });
 
 

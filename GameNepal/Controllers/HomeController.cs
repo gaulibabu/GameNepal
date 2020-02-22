@@ -4,9 +4,12 @@ using System.Configuration;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.Routing;
+using GameNepal.Filters;
 
 namespace GameNepal.Controllers
 {
+    [ExceptionFilter]
     public class HomeController : Controller
     {
         public ActionResult Index()
@@ -49,13 +52,14 @@ namespace GameNepal.Controllers
 
                         return RedirectToAction("Index", user.type == (int)UserTypes.Admin ? "Admin" : "User");
                     }
-
-                    TempData["ErrorMsg"] = "<strong>Invalid credentails. Username and/or password does not match. </strong>";
+                    
+                    TempData["ErrorMsg"] = "<strong>Invalid credentials. Username and/or password does not match. </strong>";
                     return View("Login");
                 }
             }
             catch (Exception e)
             {
+                Helper.LogException(e.Source, e.Message, e.GetType().ToString(), e.StackTrace);
                 TempData["ErrorMsg"] = "<strong>Some unexpected error occured. Please try again!! </strong>";
                 return View("Login");
             }
@@ -122,8 +126,9 @@ namespace GameNepal.Controllers
                 return RedirectToAction("Index", "User");
             }
 
-            catch
+            catch (Exception e)
             {
+                Helper.LogException(e.Source, e.Message, e.GetType().ToString(), e.StackTrace);
                 TempData["ErrorMsg"] = "<strong>Some unexpected error occured. Please try again!! </strong>";
                 return View("Register", userModel);
             }
@@ -173,6 +178,7 @@ namespace GameNepal.Controllers
             }
             catch (Exception e)
             {
+                Helper.LogException(e.Source, e.Message, e.GetType().ToString(), e.StackTrace);
                 TempData["SuccessMsg"] = null;
                 TempData["ForgotPwdErrorMsg"] = "<strong> Some error occurred processing your request.</strong>";
             }
@@ -213,6 +219,7 @@ namespace GameNepal.Controllers
 
             catch (Exception e)
             {
+                Helper.LogException(e.Source, e.Message, e.GetType().ToString(), e.StackTrace, userId);
                 return "";
             }
         }
@@ -240,8 +247,8 @@ namespace GameNepal.Controllers
                     }
                 }
 
-                ViewBag.ErrorMsg = "Sorry, the link you have entered is not valid or has been expired.";
-                return View("Error");
+                TempData["customErrMsg"] = "Sorry, the link you have entered is not valid or has been expired.";
+                return RedirectToAction("Error");
             }
         }
 
@@ -318,8 +325,9 @@ namespace GameNepal.Controllers
                 return RedirectToAction("Login");
             }
 
-            catch
+            catch (Exception e)
             {
+                Helper.LogException(e.Source, e.Message, e.GetType().ToString(), e.StackTrace, user.id);
                 TempData["ErrorMsg"] = "Some unexpected error occured. Please try again!! ";
                 return RedirectToAction("ResetPassword");
             }
@@ -397,8 +405,9 @@ namespace GameNepal.Controllers
                 return PartialView("_ChangePassword", model);
             }
 
-            catch
+            catch (Exception e)
             {
+                Helper.LogException(e.Source, e.Message, e.GetType().ToString(), e.StackTrace, user.id);
                 TempData["ErrorMsg"] = "<strong>Some unexpected error occured. Please try again!! </strong>";
                 return PartialView("_ChangePassword", model);
             }
@@ -412,7 +421,14 @@ namespace GameNepal.Controllers
 
         public ActionResult Contact()
         {
-            return Session["UserInfo"] != null ? (ActionResult) View() : RedirectToAction("Login");
+            return Session["UserInfo"] != null ? (ActionResult)View() : RedirectToAction("Login");
+        }
+
+        public ActionResult Error()
+        {
+            var message = TempData["customErrMsg"] as string;
+            ViewBag.ErrorMsg = string.IsNullOrEmpty(message) ? "Please contact your administrator if you need any help" : message;
+            return View("Error");
         }
     }
 }

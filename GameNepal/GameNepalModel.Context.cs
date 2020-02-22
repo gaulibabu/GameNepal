@@ -31,5 +31,7 @@ namespace GameNepal
         public virtual DbSet<PaymentPartner> PaymentPartners { get; set; }
         public virtual DbSet<PasswordToken> PasswordTokens { get; set; }
         public virtual DbSet<ExchangeRate> ExchangeRates { get; set; }
+        public virtual DbSet<Advertisement> Advertisements { get; set; }
+        public virtual DbSet<ErrorLog> ErrorLogs { get; set; }
     }
 }

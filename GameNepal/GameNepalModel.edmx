@@ -5,6 +5,31 @@
     <!-- SSDL content -->
     <edmx:StorageModels>
     <Schema Namespace="GameNepalModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Advertisement">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="filepath" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="filename" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="description" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="displayorder" Type="int" Nullable="false" />
+          <Property Name="isActive" Type="bit" Nullable="false" />
+          <Property Name="createdate" Type="datetime" Nullable="false" />
+          <Property Name="updatedate" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="ErrorLog">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="message" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="source" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="type" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="stackTrace" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="userid" Type="int" />
+          <Property Name="createdate" Type="datetime" Nullable="false" />
+        </EntityType>
         <EntityType Name="ExchangeRate">
           <Key>
             <PropertyRef Name="id" />
@@ -83,6 +108,8 @@
           <Property Name="isActive" Type="bit" Nullable="false" />
         </EntityType>
         <EntityContainer Name="GameNepalModelStoreContainer">
+          <EntitySet Name="Advertisement" EntityType="Self.Advertisement" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ErrorLog" EntityType="Self.ErrorLog" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ExchangeRate" EntityType="Self.ExchangeRate" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Game" EntityType="Self.Game" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="PasswordToken" EntityType="Self.PasswordToken" Schema="dbo" store:Type="Tables" />
@@ -145,6 +172,8 @@
           <EntitySet Name="PaymentPartners" EntityType="GameNepalModel.PaymentPartner" />
           <EntitySet Name="PasswordTokens" EntityType="GameNepalModel.PasswordToken" />
           <EntitySet Name="ExchangeRates" EntityType="GameNepalModel.ExchangeRate" />
+          <EntitySet Name="Advertisements" EntityType="GameNepalModel.Advertisement" />
+          <EntitySet Name="ErrorLogs" EntityType="GameNepalModel.ErrorLog" />
         </EntityContainer>
         <EntityType Name="PaymentPartner">
           <Key>
@@ -178,6 +207,31 @@
           <Property Name="value" Type="Int32" Nullable="false" />
           <Property Name="createdate" Type="DateTime" Precision="3" />
           <Property Name="updatedate" Type="DateTime" Precision="3" />
+        </EntityType>
+        <EntityType Name="Advertisement">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="filepath" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="filename" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="description" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="displayorder" Type="Int32" Nullable="false" />
+          <Property Name="isActive" Type="Boolean" Nullable="false" />
+          <Property Name="createdate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="updatedate" Type="DateTime" Nullable="false" Precision="3" />
+        </EntityType>
+        <EntityType Name="ErrorLog">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="message" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="source" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="type" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="stackTrace" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="userid" Type="Int32" />
+          <Property Name="createdate" Type="DateTime" Nullable="false" Precision="3" />
         </EntityType>
       </Schema>
     </edmx:ConceptualModels>
@@ -264,6 +318,33 @@
                 <ScalarProperty Name="value" ColumnName="value" />
                 <ScalarProperty Name="gamecurrency" ColumnName="gamecurrency" />
                 <ScalarProperty Name="gameid" ColumnName="gameid" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Advertisements">
+            <EntityTypeMapping TypeName="GameNepalModel.Advertisement">
+              <MappingFragment StoreEntitySet="Advertisement">
+                <ScalarProperty Name="updatedate" ColumnName="updatedate" />
+                <ScalarProperty Name="createdate" ColumnName="createdate" />
+                <ScalarProperty Name="isActive" ColumnName="isActive" />
+                <ScalarProperty Name="displayorder" ColumnName="displayorder" />
+                <ScalarProperty Name="description" ColumnName="description" />
+                <ScalarProperty Name="filename" ColumnName="filename" />
+                <ScalarProperty Name="filepath" ColumnName="filepath" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ErrorLogs">
+            <EntityTypeMapping TypeName="GameNepalModel.ErrorLog">
+              <MappingFragment StoreEntitySet="ErrorLog">
+                <ScalarProperty Name="createdate" ColumnName="createdate" />
+                <ScalarProperty Name="userid" ColumnName="userid" />
+                <ScalarProperty Name="stackTrace" ColumnName="stackTrace" />
+                <ScalarProperty Name="type" ColumnName="type" />
+                <ScalarProperty Name="source" ColumnName="source" />
+                <ScalarProperty Name="message" ColumnName="message" />
                 <ScalarProperty Name="id" ColumnName="id" />
               </MappingFragment>
             </EntityTypeMapping>

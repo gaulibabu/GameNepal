@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Dynamic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -97,7 +98,7 @@ namespace GameNepal.Models
                     {
                         paymentInfoDict[p.partnername] = string.IsNullOrEmpty(p.paymentinfo) ? "N/A" : p.paymentinfo;
                     }
-                };
+                }
                 return paymentInfoDict;
             }
         }
@@ -156,6 +157,29 @@ namespace GameNepal.Models
                     exchangeRates.Add(freeFireRate);
                 };
                 return exchangeRates;
+            }
+        }
+
+        public Dictionary<string, object> Advertisements
+        {
+            get
+            {
+                var dictAdvertisement = new Dictionary<string, object>();
+                using (var context = new GameNepalEntities())
+                {
+                    var advertisementList = (from ad in context.Advertisements
+                        where ad.isActive
+                        select new { ad.filename, ad.filepath, ad.updatedate, ad.description }).ToList();
+
+                    foreach (var adv in advertisementList.OrderBy(x=>x.updatedate))
+                    {
+                        dynamic fileDetails = new ExpandoObject();
+                        fileDetails.filePath = string.IsNullOrEmpty(adv.filepath) ? "" : adv.filepath;
+                        fileDetails.description = adv.description;
+                        dictAdvertisement[adv.filename] = fileDetails;
+                    }
+                }
+                return dictAdvertisement;
             }
         }
     }

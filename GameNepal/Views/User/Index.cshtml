@@ -19,28 +19,28 @@
                         </ol>
                         <div class="carousel-inner">
                             <div class="item active">
-                                <img src="../../Content/images/pubg.jpg" class="d-block w-100" alt="...">
+                                <img src="../../Content/images/pubg.jpg" class="d-block w-100" alt="PUBG">
                                 <div class="carousel-caption d-none d-md-block">
                                     <h5>PUBG</h5>
                                     <p>PlayerUnknown's Battlegrounds is an online multiplayer battle royale game developed and published by PUBG Corporation, a subsidiary of South Korean video game company Bluehole.</p>
                                 </div>
                             </div>
                             <div class="item">
-                                <img src="../../Content/images/fortnite.jpg" class="d-block w-100" alt="...">
+                                <img src="../../Content/images/fortnite.jpg" class="d-block w-100" alt="FORTNITE">
                                 <div class="carousel-caption d-none d-md-block">
                                     <h5>FORTNITE</h5>
                                     <p>Fortnite is an online video game developed by Epic Games and released in 2017. It is available in three distinct game mode versions: Fortnite: Save the World, Fortnite Battle Royale and Fortnite Creative</p>
                                 </div>
                             </div>
                             <div class="item">
-                                <img src="../../Content/images/nfs.jpg" class="d-block w-100" alt="...">
+                                <img src="../../Content/images/nfs.jpg" class="d-block w-100" alt="NEED FOR SPEED">
                                 <div class="carousel-caption d-none d-md-block">
                                     <h5>NEED FOR SPEED</h5>
                                     <p>Need for Speed is a racing video game franchise published by Electronic Arts and currently developed by Ghost Games. </p>
                                 </div>
                             </div>
                             <div class="item">
-                                <img src="../../Content/images/freefire.jpg" class="d-block w-100" alt="...">
+                                <img src="../../Content/images/freefire.jpg" class="d-block w-100" alt="GARENA FREE FIRE">
                                 <div class="carousel-caption d-none d-md-block">
                                     <h5>GARENA FREE FIRE</h5>
                                     <p>Garena Free Fire is a mobile battle royale game, developed and published by Garena. </p>
@@ -154,10 +154,37 @@
             <!-- Purchase form -->
             <section class="row" id="tmHomeForm">
                 <div class="col-12 tm-call-to-action-col">
-                    <img src="img/call-to-action.jpg" alt="Image" class="img-fluid tm-call-to-action-image" />
+                    <div class="advertisement tm-bg-transparent">
+                        <div id="myCarousel1" class="carousel slide" data-ride="carousel">
+
+                            @if (Model.Advertisements.Keys.Count > 0)
+                            {
+                                <div class="carousel-inner">
+                                    @for (var index = 0; index < Model.Advertisements.Keys.Count; index++)
+                                    {
+                                        var classAttr = index == 0 ? "item active" : "item";
+                                        var name = Model.Advertisements.ElementAt(index).Key;
+                                        dynamic fileDetails = Model.Advertisements.ElementAt(index).Value;
+
+                                        var filePath = fileDetails.filePath;
+                                        var desc = fileDetails.description;
+
+                                        <div class="@classAttr">
+                                            <img src="../../@filePath" class="d-block w-100" alt=@name>
+                                            <div class="carousel-caption d-none d-md-block">
+                                                <h5>@name</h5>
+                                                <p>@desc</p>
+                                            </div>
+                                        </div>
+                                    }
+                                </div>
+                            }
+                        </div>
+                    </div>
+                    <!-- Right Form-->
                     <div class="tm-bg-transparent tm-call-to-action-text">
                         <h2 class="tm-call-to-action-title">Purchase Order Form</h2>
-                        <p class="tm-call-to-action-description" style="color:red">
+                        <p class="tm-call-to-action-description" style="color: red">
                             *It might take more processing time than usual if payment amount does not match or if you enter wrong receipt number
                         </p>
                         <div class="errorMessage">
@@ -174,7 +201,7 @@
                                 <div class="alert alert-danger fade in" id="divResult">
                                     <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
                                     @Html.Raw(TempData["ErrorMsg"])
-                                    @Html.ValidationSummary(false, "", new { @class = "text-danger" })
+                                    @Html.ValidationSummary(false, "", new {@class = "text-danger"})
                                 </div>
                             }
                         </div>
@@ -184,30 +211,30 @@
                             <div class="form-row">
                                 <div class="form-group col-md-6">
                                     @Html.Label("Game")
-                                    @Html.DropDownListFor(x => x.GameId, Model.GamesList, new { @id = "inputGame", @class = "form-control dropDown" })
+                                    @Html.DropDownListFor(x => x.GameId, Model.GamesList, new {@id = "inputGame", @class = "form-control dropDown"})
                                 </div>
                                 <div class="form-group col-md-6">
                                     @Html.Label("User name")
-                                    @Html.TextBoxFor(x => x.Username, new { @class = "form-control", @id = "inputUsername", required = "required", placeholder = "Enter your username for the game" })
+                                    @Html.TextBoxFor(x => x.Username, new {@class = "form-control", @id = "inputUsername", required = "required", placeholder = "Enter your username for the game"})
                                 </div>
                             </div>
                             <div class="form-row">
                                 <div class="form-group col-md-6">
                                     @Html.Label("Payment confirmation number")
-                                    @Html.TextBoxFor(x => x.PaymentId, new { @class = "form-control", @id = "inputConfirm", required = "required", placeholder = "Enter your receipt id" })
+                                    @Html.TextBoxFor(x => x.PaymentId, new {@class = "form-control", @id = "inputConfirm", required = "required", placeholder = "Enter your receipt id"})
                                 </div>
                                 <div class="form-group col-md-4">
                                     @Html.Label("Payment Method")
-                                    @Html.DropDownListFor(x => x.PaymentPartnerId, Model.PaymentPartners, new { @class = "form-control dropDown", @id = "inputPayment" })
+                                    @Html.DropDownListFor(x => x.PaymentPartnerId, Model.PaymentPartners, new {@class = "form-control dropDown", @id = "inputPayment"})
                                 </div>
                                 <div class="form-group col-md-2">
                                     @Html.Label("Amount")
-                                    @Html.TextBoxFor(x => x.Amount, new { @class = "form-control", required = "required", placeholder = "Enter amount", @id = "inputAmount" })
+                                    @Html.TextBoxFor(x => x.Amount, new {@class = "form-control", required = "required", placeholder = "Enter amount", @id = "inputAmount"})
                                 </div>
                             </div>
                             <div class="form-group col-md-12">
                                 @Html.Label("Remarks")
-                                @Html.TextAreaFor(x => x.Remarks, new { @class = "form-control", required = "required", placeholder = "Describe what would you like to buy here..", @id = "inputRemark" })
+                                @Html.TextAreaFor(x => x.Remarks, new {@class = "form-control", required = "required", placeholder = "Describe what would you like to buy here..", @id = "inputRemark"})
                             </div>
                             <div class="form-group col-md-6">
                                 <button type="reset" class="btn btn-danger">Reset</button>
