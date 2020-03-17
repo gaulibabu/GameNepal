@@ -36,5 +36,12 @@ namespace GameNepal.Tests.Controllers
             // Assert
             Assert.IsNotNull(result);
         }
+        [TestMethod]
+        public void sayHello()
+        {
+            string result = "hello world";
+            Assert.AreEqual("hello world", result);
+
+        }
     }
 }
