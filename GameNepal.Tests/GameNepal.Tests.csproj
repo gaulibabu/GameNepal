@@ -124,7 +124,7 @@
   <Target Name="AfterBuild">
   </Target>
   
-      <Target Name="BuildTarget">
+ <!--     <Target Name="BuildTarget">
 <Message Text="Build selected" Importance="high"/>
-</Target>
+</Target> -->
 </Project>
